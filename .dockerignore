@@ -1,0 +1,8 @@
+
+
+diast/
+node_modules/
+.gitignore
+.git/
+mongo/
+Dockerfile.temp

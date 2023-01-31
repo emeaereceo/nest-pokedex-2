@@ -1,0 +1,51 @@
+# Este archivo bien podria ser uno de dev
+# docker-compose.dev.yaml
+version: '3'
+
+# Ademas de la base de datos, yaml antiguo ahora creamos un servicio que es nuestra app
+services:
+  # Este sera el nombre del servicio
+  pokedexapp:
+    # Depende de la DB, es decir si la base no se levanta, no se levantara el pokedex
+    depends_on:
+      - db
+    # Paso de construccion de esta imagen
+    build: 
+      # Se basa en la posicion fisica de nuestro archivo docker compose, el dir raiz
+      context: .
+      # El archivo dockerfile con la configuracion, en caso de existir otro archivo se puede cambiar el nombre nada mas
+      # dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
+    #la imagen que generaremos tendra este nombre
+    image: pokedex-docker
+    # El nombre del container sera 
+    container_name: pokedexapp
+    restart: always # reiniciar el contenedor si se detiene
+    # conectara el puerto que tenemos en nuestro .env con el puerto de docker
+    ports:
+      - "${PORT}:${PORT}"
+    # working_dir: /var/www/pokedex
+    # Defino variables de entorno, que serian las mismas que tengo en el .env
+    environment:
+      MONGODB: ${MONGODB}
+      PORT: ${PORT}
+      DEFAULT_LIMIT: ${DEFAULT_LIMIT}
+    # volumes:
+    #   - ./:/var/www/pokedex
+
+  db:
+    # La imagen de mongo db
+    image: mongo:5
+    # El nombre del container
+    container_name: mongo-poke
+    # En caso que se caiga, volvera a levantar
+    restart: always
+    # El puerto
+    ports:
+      - 27017:27017
+    # La variable de entorno en donde apuntamos a la base de datos.
+    environment:
+      MONGODB_DATABASE: nest-pokemon
+    # Declarar el volumes permite que la data persista y no se pierda al eliminar el entorno
+    volumes:
+      - ./mongo:/data/db
