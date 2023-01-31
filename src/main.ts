@@ -10,7 +10,13 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-      forbidNonWhitelisted: true, 
+      forbidNonWhitelisted: true,
+      // Transforma los datos que pasas por los Dtos
+      // Otra forma de transformar esta directo en el pagination.dto
+      // transform:true,
+      // transformOptions:{
+      //   enableImplicitConversion: true,
+      // }
     })
   );
 
